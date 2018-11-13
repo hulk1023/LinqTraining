@@ -126,5 +126,62 @@ namespace LinqSample.WithoutLinq
                 }
             }
         }
+
+        public static IEnumerable<int> YourGroup(
+            this IEnumerable<Employee> source,
+            int groupAmt,
+            Func<Employee, int> func)
+        {
+            var sumGroups = new List<int>();
+
+            var counter = 0;
+            int sumGroup = 0;
+            foreach (var employee in source)
+            {
+                sumGroup += func(employee);
+                counter++;
+
+                if (counter == groupAmt)
+                {
+                    sumGroups.Add(sumGroup);
+                    counter = 0;
+                    sumGroup = 0;
+                }
+            }
+
+            if (sumGroup > 0)
+            {
+                sumGroups.Add(sumGroup);
+            }
+
+            return sumGroups;
+        }
+
+        public static Employee YourFirst(this IEnumerable<Employee> source, Func<Employee, bool> rule)
+        {
+            foreach (var employee in source)
+            {
+                if (rule(employee))
+                {
+                    return employee;
+                }
+            }
+
+            return null;
+        }
+
+        public static Employee YourLast(this IEnumerable<Employee> source, Func<Employee, bool> rule)
+        {
+            Employee employeeT = null;
+            foreach (var employee in source)
+            {
+                if (rule(employee))
+                {
+                    employeeT = employee;
+                }
+            }
+
+            return employeeT;
+        }
     }
 }
